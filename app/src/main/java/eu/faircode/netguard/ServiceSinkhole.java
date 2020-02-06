@@ -20,6 +20,7 @@ package eu.faircode.netguard;
 */
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -100,6 +101,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -2750,8 +2752,8 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
     }
 
     private Notification getEnforcingNotification(int allowed, int blocked, int hosts) {
-        Intent main = new Intent(this, ActivityMain.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, main, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent main = new Intent(this, ActivityMain.class); // intent to go to main
+        PendingIntent pi = PendingIntent.getActivity(this, 0, main, PendingIntent.FLAG_UPDATE_CURRENT); // attach main intent to notification
 
         TypedValue tv = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorPrimary, tv, true);
@@ -2761,13 +2763,28 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
                 .setColor(tv.data)
                 .setOngoing(true)
                 .setAutoCancel(false);
+        //=================================================================================================
+        ActivityManager am = (ActivityManager) this.getSystemService((ACTIVITY_SERVICE));
+        List list_of_running_services = am.getRecentTasks(1, ActivityManager.RECENT_WITH_EXCLUDED);
+        Iterator it_list_services = list_of_running_services.iterator();
+        PackageManager pm = this.getPackageManager();
+        CharSequence c = "Name not checked";
+        while(it_list_services.hasNext()){
+            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(it_list_services.next());
+            try{
+                c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
 
+            } catch(Exception e){
+                c = "Name not found";
+            }
+        }
+        //=================================================================================================
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             builder.setContentTitle(getString(R.string.msg_started));
         else
             builder.setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.msg_started));
-
+        builder.setContentText(c);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             builder.setCategory(NotificationCompat.CATEGORY_STATUS)
                     .setVisibility(NotificationCompat.VISIBILITY_SECRET)

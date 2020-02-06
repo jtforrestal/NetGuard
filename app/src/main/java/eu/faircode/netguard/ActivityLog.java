@@ -19,6 +19,8 @@ package eu.faircode.netguard;
     Copyright 2015-2019 by Marcel Bokhorst (M66B)
 */
 
+
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;

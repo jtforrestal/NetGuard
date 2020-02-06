@@ -19,6 +19,8 @@ package eu.faircode.netguard;
     Copyright 2015-2019 by Marcel Bokhorst (M66B)
 */
 
+//Set of functions using SQL to create and manipulate the database, includes the schema definition
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -131,6 +133,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super.onConfigure(db);
     }
 
+    // Schema for the tables
+    ////////////////////////////////////////////////
     private void createTableLog(SQLiteDatabase db) {
         Log.i(TAG, "Creating log table");
         db.execSQL("CREATE TABLE log (" +
@@ -139,9 +143,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ", version INTEGER" +
                 ", protocol INTEGER" +
                 ", flags TEXT" +
-                ", saddr TEXT" +
+                ", saddr TEXT" +        //source
                 ", sport INTEGER" +
-                ", daddr TEXT" +
+                ", daddr TEXT" +        // destination
                 ", dport INTEGER" +
                 ", dname TEXT" +
                 ", uid INTEGER" +
@@ -218,6 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE UNIQUE INDEX idx_package ON app(package)");
     }
 
+    // check if a column exists
     private boolean columnExists(SQLiteDatabase db, String table, String column) {
         Cursor cursor = null;
         try {
@@ -511,7 +516,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Access
-
+    // update the access table
     public boolean updateAccess(Packet packet, String dname, int block) {
         int rows;
 
@@ -1012,7 +1017,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             lock.readLock().unlock();
         }
     }
-
+        // Function for adding an app to the table
+        //////////////////////////////////////////
     public void addApp(String packageName, String label, boolean system, boolean internet, boolean enabled) {
         lock.writeLock().lock();
         try {
