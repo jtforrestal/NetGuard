@@ -2763,28 +2763,17 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
                 .setColor(tv.data)
                 .setOngoing(true)
                 .setAutoCancel(false);
-        //=================================================================================================
+//       //=================================================================================================
         ActivityManager am = (ActivityManager) this.getSystemService((ACTIVITY_SERVICE));
-        List list_of_running_services = am.getRecentTasks(1, ActivityManager.RECENT_WITH_EXCLUDED);
-        Iterator it_list_services = list_of_running_services.iterator();
-        PackageManager pm = this.getPackageManager();
-        CharSequence c = "Name not checked";
-        while(it_list_services.hasNext()){
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(it_list_services.next());
-            try{
-                c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-
-            } catch(Exception e){
-                c = "Name not found";
-            }
-        }
-        //=================================================================================================
+        ActivityManager.RunningTaskInfo foregroundTaskInfo = am.getRunningTasks(1).get(0);
+        String foregroundTaskPackageName = foregroundTaskInfo.topActivity.getPackageName();
+//       //=================================================================================================
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             builder.setContentTitle(getString(R.string.msg_started));
         else
             builder.setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.msg_started));
-        builder.setContentText(c);
+        builder.setContentText(foregroundTaskPackageName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             builder.setCategory(NotificationCompat.CATEGORY_STATUS)
                     .setVisibility(NotificationCompat.VISIBILITY_SECRET)
