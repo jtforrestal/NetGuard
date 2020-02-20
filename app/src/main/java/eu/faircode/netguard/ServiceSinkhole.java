@@ -2763,17 +2763,14 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
                 .setColor(tv.data)
                 .setOngoing(true)
                 .setAutoCancel(false);
-//       //=================================================================================================
-        ActivityManager am = (ActivityManager) this.getSystemService((ACTIVITY_SERVICE));
-        ActivityManager.RunningTaskInfo foregroundTaskInfo = am.getRunningTasks(1).get(0);
-        String foregroundTaskPackageName = foregroundTaskInfo.topActivity.getPackageName();
-//       //=================================================================================================
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             builder.setContentTitle(getString(R.string.msg_started));
+
         else
             builder.setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.msg_started));
-        builder.setContentText(foregroundTaskPackageName);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             builder.setCategory(NotificationCompat.CATEGORY_STATUS)
                     .setVisibility(NotificationCompat.VISIBILITY_SECRET)
@@ -2802,13 +2799,16 @@ public class ServiceSinkhole extends VpnService implements SharedPreferences.OnS
             } else {
                 NotificationCompat.BigTextStyle notification = new NotificationCompat.BigTextStyle(builder);
                 notification.bigText(getString(R.string.msg_started));
+
                 if (Util.isPlayStoreInstall(this))
                     notification.setSummaryText(getString(R.string.msg_packages, allowed, blocked));
                 else
                     notification.setSummaryText(getString(R.string.msg_hosts, allowed, blocked, hosts));
+
                 return notification.build();
             }
         } else
+
             return builder.build();
     }
 
