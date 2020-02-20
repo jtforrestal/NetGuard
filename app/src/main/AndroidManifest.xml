@@ -45,7 +45,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeTeal"
-        tools:ignore="ManifestResource">
+        tools:ignore="GoogleAppIndexingWarning,ManifestResource">
 
         <meta-data
             android:name="android.max_aspect"
@@ -166,6 +166,18 @@
             <intent-filter>
                 <action android:name="eu.faircode.netguard.DOWNLOAD_HOSTS_FILE" />
             </intent-filter>
+        </service>
+
+        <service
+            android:name=".ServiceForegroundMonitor"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
         </service>
 
         <service
