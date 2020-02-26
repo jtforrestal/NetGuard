@@ -11,6 +11,8 @@
     <string name="app_disagree">I disagree</string>
     <string name="app_support">NetGuard needs your help. Tap to purchase pro features to keep the project going.</string>
 
+    <string name="foreground_rule_update">Block Most Recent Connection</string>
+
     <string name="channel_foreground">Running services</string>
     <string name="channel_notify">General notifications</string>
     <string name="channel_access">Access notifications</string>
